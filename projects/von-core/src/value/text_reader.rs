@@ -1,12 +1,14 @@
 use super::*;
+use pex::ParseState;
+use serde::de::{Error, Unexpected};
 
 pub struct TextReader<'i> {
-    buffer: &'i str,
+    state: ParseState<'i>,
 }
 
 impl<'i> TextReader<'i> {
-    pub fn new(input: &'i str) -> Self {
-        TextReader { buffer: input }
+    pub fn new(input: &str) -> Self {
+        TextReader { state: ParseState::new(input) }
     }
 }
 
@@ -24,91 +26,102 @@ impl<'i, 'de> Deserializer<'de> for TextReader<'i> {
     where
         V: Visitor<'de>,
     {
-        visitor.visit_bool(self.buffer.parse::<bool>()?)
+        let (a, b) = self
+            .state
+            .begin_choice()
+            .or_else(|s| s.match_str("true", true).map_inner(|_| true))
+            .or_else(|s| s.match_str("false", true).map_inner(|_| false))
+            .end_choice()?;
+        for char in a.rest_text.chars() {
+            if !char.is_whitespace() {
+                return Err(Error::invalid_value(Unexpected::Str(a.rest_text), &"boolean").into());
+            }
+        }
+        visitor.visit_bool(b)
     }
 
     fn deserialize_i8<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_i8(self.buffer.parse::<i8>()?)
+        todo!()
     }
 
     fn deserialize_i16<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_i16(self.buffer.parse::<i16>()?)
+        todo!()
     }
 
     fn deserialize_i32<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_i32(self.buffer.parse::<i32>()?)
+        todo!()
     }
 
     fn deserialize_i64<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_i64(self.buffer.parse::<i64>()?)
+        todo!()
     }
 
     fn deserialize_i128<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_i128(self.buffer.parse::<i128>()?)
+        todo!()
     }
 
     fn deserialize_u8<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_u8(self.buffer.parse::<u8>()?)
+        todo!()
     }
 
     fn deserialize_u16<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_u16(self.buffer.parse::<u16>()?)
+        todo!()
     }
 
     fn deserialize_u32<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_u32(self.buffer.parse::<u32>()?)
+        todo!()
     }
 
     fn deserialize_u64<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_u64(self.buffer.parse::<u64>()?)
+        todo!()
     }
 
     fn deserialize_u128<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_u128(self.buffer.parse::<u128>()?)
+        todo!()
     }
 
     fn deserialize_f32<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_f32(self.buffer.parse::<f32>()?)
+        todo!()
     }
 
     fn deserialize_f64<V>(self, visitor: V) -> VonResult<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_f64(self.buffer.parse::<f64>()?)
+        todo!()
     }
 
     fn deserialize_char<V>(self, visitor: V) -> Result<V::Value, Self::Error>

@@ -1,6 +1,7 @@
 use super::*;
+use serde::de::Error;
 
-impl serde::de::Error for VonError {
+impl Error for VonError {
     fn custom<T>(msg: T) -> Self
     where
         T: Display,
@@ -39,6 +40,17 @@ impl serde::de::Error for VonError {
 }
 impl From<ParseBoolError> for VonError {
     fn from(value: ParseBoolError) -> Self {
-        <Self as serde::de::Error>::custom(value)
+        <Self as Error>::custom(value)
+    }
+}
+impl From<ParseIntError> for VonError {
+    fn from(value: ParseIntError) -> Self {
+        <Self as Error>::custom(value)
+    }
+}
+
+impl From<ParseFloatError> for VonError {
+    fn from(value: ParseFloatError) -> Self {
+        <Self as Error>::custom(value)
     }
 }

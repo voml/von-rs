@@ -2,9 +2,9 @@ use serde::de::{Expected, Unexpected};
 use std::{
     error::Error,
     fmt::{Display, Formatter},
+    num::{ParseFloatError, ParseIntError},
     str::ParseBoolError,
 };
-
 mod decode_error;
 
 #[derive(Clone, Debug)]
