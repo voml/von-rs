@@ -10,7 +10,6 @@ impl VirtualObject {
             VirtualObject::String(v) => Unexpected::Str(v),
             VirtualObject::Integer(_) => Unexpected::Other("integer"),
             VirtualObject::Decimal(_) => Unexpected::Other("decimal"),
-            VirtualObject::Table(_) => Unexpected::Other("table"),
         }
     }
 }

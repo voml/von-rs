@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use von::{VirtualObject, VirtualTable};
+use von::VirtualObject;
 
 #[test]
 #[allow(clippy::bool_assert_comparison)]
@@ -26,9 +26,9 @@ fn test_primitives() {
     assert_eq!(f64::deserialize(VirtualObject::decimal(1.0)), Ok(1.0));
 }
 
-#[test]
-fn test_table() {
-    let mut table = VirtualTable::new(0);
-    table.insert_item(true);
-    println!("{:#?}", table)
-}
+// #[test]
+// fn test_table() {
+//     let mut table = VirtualTable::new(0);
+//     table.insert_item(true);
+//     println!("{:#?}", table)
+// }

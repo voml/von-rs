@@ -17,7 +17,6 @@ mod from_object;
 pub mod into_object;
 mod number_like;
 pub mod text_reader;
-use crate::table::VirtualTable;
 
 #[derive(Debug, Clone)]
 pub enum VirtualObject {
@@ -26,7 +25,6 @@ pub enum VirtualObject {
     String(String),
     Integer(BigInt),
     Decimal(f64),
-    Table(VirtualTable),
 }
 
 impl VirtualObject {
