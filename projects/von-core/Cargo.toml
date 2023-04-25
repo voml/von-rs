@@ -10,10 +10,11 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-serde_json = "1.0.96"
+indexmap = "1.9.3"
 serde = "1.0.160"
 
 [dev-dependencies]
+serde_json = "1.0.96"
 
 [features]
 default = []

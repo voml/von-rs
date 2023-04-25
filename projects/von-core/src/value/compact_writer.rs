@@ -1,23 +1,23 @@
-use std::fmt::{Display, Write};
-use serde::ser::{SerializeMap, SerializeSeq, SerializeStruct, SerializeStructVariant, SerializeTuple, SerializeTupleStruct, SerializeTupleVariant};
-use crate::{VonError, VonResult};
 use super::*;
-
+use std::fmt::Write;
 pub struct CompactWriter<'i, W> {
     buffer: &'i mut W,
     quotation_marks: char,
 }
 
-impl<'i, W> CompactWriter<'i, W> where W: Write {
+impl<'i, W> CompactWriter<'i, W>
+where
+    W: Write,
+{
     pub fn new(buffer: &'i mut W) -> Self {
-        CompactWriter {
-            buffer,
-            quotation_marks: '\"',
-        }
+        CompactWriter { buffer, quotation_marks: '\"' }
     }
 }
 
-impl<'i, W> Serializer for CompactWriter<'i, W> where W: Write {
+impl<'i, W> Serializer for CompactWriter<'i, W>
+where
+    W: Write,
+{
     type Ok = ();
     type Error = VonError;
     type SerializeSeq = CompactSequence;
@@ -34,70 +34,80 @@ impl<'i, W> Serializer for CompactWriter<'i, W> where W: Write {
     }
 
     fn serialize_i8(self, v: i8) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_i16(self, v: i16) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_i32(self, v: i32) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_i64(self, v: i64) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_i128(self, v: i128) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_u8(self, v: u8) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_u16(self, v: u16) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_u32(self, v: u32) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_u64(self, v: u64) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_u128(self, v: u128) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_f32(self, v: f32) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
     fn serialize_f64(self, v: f64) -> VonResult<()> {
-        Ok(write!(self.buffer, "{}", v)?)
+        Ok(write!(self.buffer, "{v}")?)
     }
 
-    fn serialize_char(self, v: char) -> Result<Self::Ok, Self::Error> {
-        todo!()
+    fn serialize_char(self, v: char) -> VonResult<()> {
+        todo!("serialize {v}")
     }
 
-    fn serialize_str(self, v: &str) -> Result<Self::Ok, Self::Error> {
-        todo!()
+    fn serialize_str(self, v: &str) -> VonResult<()> {
+        Ok(write!(self.buffer, "{v:?}")?)
     }
 
     fn serialize_bytes(self, v: &[u8]) -> Result<Self::Ok, Self::Error> {
-        todo!()
+        write!(self.buffer, "[")?;
+        for (i, byte) in v.iter().enumerate() {
+            if i > 0 {
+                write!(self.buffer, ",")?;
+            }
+            write!(self.buffer, "{}", byte)?;
+        }
+        Ok(write!(self.buffer, "]")?)
     }
 
     fn serialize_none(self) -> Result<Self::Ok, Self::Error> {
         todo!()
     }
 
-    fn serialize_some<T: ?Sized>(self, value: &T) -> Result<Self::Ok, Self::Error> where T: Serialize {
+    fn serialize_some<T: ?Sized>(self, value: &T) -> Result<Self::Ok, Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
@@ -109,15 +119,32 @@ impl<'i, W> Serializer for CompactWriter<'i, W> where W: Write {
         todo!()
     }
 
-    fn serialize_unit_variant(self, name: &'static str, variant_index: u32, variant: &'static str) -> Result<Self::Ok, Self::Error> {
+    fn serialize_unit_variant(
+        self,
+        name: &'static str,
+        variant_index: u32,
+        variant: &'static str,
+    ) -> Result<Self::Ok, Self::Error> {
         todo!()
     }
 
-    fn serialize_newtype_struct<T: ?Sized>(self, name: &'static str, value: &T) -> Result<Self::Ok, Self::Error> where T: Serialize {
+    fn serialize_newtype_struct<T: ?Sized>(self, name: &'static str, value: &T) -> Result<Self::Ok, Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
-    fn serialize_newtype_variant<T: ?Sized>(self, name: &'static str, variant_index: u32, variant: &'static str, value: &T) -> Result<Self::Ok, Self::Error> where T: Serialize {
+    fn serialize_newtype_variant<T: ?Sized>(
+        self,
+        name: &'static str,
+        variant_index: u32,
+        variant: &'static str,
+        value: &T,
+    ) -> Result<Self::Ok, Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
@@ -133,7 +160,13 @@ impl<'i, W> Serializer for CompactWriter<'i, W> where W: Write {
         todo!()
     }
 
-    fn serialize_tuple_variant(self, name: &'static str, variant_index: u32, variant: &'static str, len: usize) -> Result<Self::SerializeTupleVariant, Self::Error> {
+    fn serialize_tuple_variant(
+        self,
+        name: &'static str,
+        variant_index: u32,
+        variant: &'static str,
+        len: usize,
+    ) -> Result<Self::SerializeTupleVariant, Self::Error> {
         todo!()
     }
 
@@ -145,19 +178,37 @@ impl<'i, W> Serializer for CompactWriter<'i, W> where W: Write {
         todo!()
     }
 
-    fn serialize_struct_variant(self, name: &'static str, variant_index: u32, variant: &'static str, len: usize) -> Result<Self::SerializeStructVariant, Self::Error> {
+    fn serialize_struct_variant(
+        self,
+        name: &'static str,
+        variant_index: u32,
+        variant: &'static str,
+        len: usize,
+    ) -> Result<Self::SerializeStructVariant, Self::Error> {
         todo!()
     }
 
-    fn collect_seq<I>(self, iter: I) -> Result<Self::Ok, Self::Error> where I: IntoIterator, <I as IntoIterator>::Item: Serialize {
+    fn collect_seq<I>(self, iter: I) -> Result<Self::Ok, Self::Error>
+    where
+        I: IntoIterator,
+        <I as IntoIterator>::Item: Serialize,
+    {
         todo!()
     }
 
-    fn collect_map<K, V, I>(self, iter: I) -> Result<Self::Ok, Self::Error> where K: Serialize, V: Serialize, I: IntoIterator<Item=(K, V)> {
+    fn collect_map<K, V, I>(self, iter: I) -> Result<Self::Ok, Self::Error>
+    where
+        K: Serialize,
+        V: Serialize,
+        I: IntoIterator<Item = (K, V)>,
+    {
         todo!()
     }
 
-    fn collect_str<T: ?Sized>(self, value: &T) -> Result<Self::Ok, Self::Error> where T: Display {
+    fn collect_str<T: ?Sized>(self, value: &T) -> Result<Self::Ok, Self::Error>
+    where
+        T: Display,
+    {
         todo!()
     }
 
@@ -172,7 +223,10 @@ impl SerializeSeq for CompactSequence {
     type Ok = ();
     type Error = VonError;
 
-    fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+    fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
@@ -185,7 +239,10 @@ impl SerializeTuple for CompactSequence {
     type Ok = ();
     type Error = VonError;
 
-    fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+    fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
@@ -198,11 +255,17 @@ impl SerializeMap for CompactSequence {
     type Ok = ();
     type Error = VonError;
 
-    fn serialize_key<T: ?Sized>(&mut self, key: &T) -> Result<(), Self::Error> where T: Serialize {
+    fn serialize_key<T: ?Sized>(&mut self, key: &T) -> Result<(), Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
-    fn serialize_value<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+    fn serialize_value<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
@@ -215,7 +278,10 @@ impl SerializeStruct for CompactSequence {
     type Ok = ();
     type Error = VonError;
 
-    fn serialize_field<T: ?Sized>(&mut self, key: &'static str, value: &T) -> Result<(), Self::Error> where T: Serialize {
+    fn serialize_field<T: ?Sized>(&mut self, key: &'static str, value: &T) -> Result<(), Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
@@ -224,12 +290,14 @@ impl SerializeStruct for CompactSequence {
     }
 }
 
-
 impl SerializeTupleVariant for CompactSequence {
     type Ok = ();
     type Error = VonError;
 
-    fn serialize_field<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+    fn serialize_field<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
@@ -242,7 +310,10 @@ impl SerializeTupleStruct for CompactSequence {
     type Ok = ();
     type Error = VonError;
 
-    fn serialize_field<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+    fn serialize_field<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
@@ -255,7 +326,10 @@ impl SerializeStructVariant for CompactSequence {
     type Ok = ();
     type Error = VonError;
 
-    fn serialize_field<T: ?Sized>(&mut self, key: &'static str, value: &T) -> Result<(), Self::Error> where T: Serialize {
+    fn serialize_field<T: ?Sized>(&mut self, key: &'static str, value: &T) -> Result<(), Self::Error>
+    where
+        T: Serialize,
+    {
         todo!()
     }
 
