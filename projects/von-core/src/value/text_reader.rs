@@ -8,7 +8,7 @@ pub struct TextReader {
 
 }
 
-impl<'de> Deserializer<'de> for CompactWriter {
+impl<'de> Deserializer<'de> for TextReader {
     type Error = VonError;
 
     fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Self::Error> where V: Visitor<'de> {

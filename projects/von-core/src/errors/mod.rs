@@ -4,14 +4,40 @@ use serde::de::{Expected, Unexpected};
 
 #[derive(Clone, Debug)]
 pub struct VonError {
-    kind: VonErrorKind,
+    kind: Box<VonErrorKind>,
 }
 
 #[derive(Clone, Debug)]
-pub enum VonErrorKind {}
+pub enum VonErrorKind {
+    CustomError {
+        message: String,
+    },
+    EncodeError {
+        message: String,
+    },
+    DecodeError {
+        message: String,
+    },
+}
 
 pub type VonResult<T> = Result<T, VonError>;
 
+
+impl VonError {
+    pub fn get_kind(&self) -> &VonErrorKind {
+        &self.kind
+    }
+    pub fn set_kind(&mut self, kind: VonErrorKind) {
+        self.kind = Box::new(kind);
+    }
+    pub fn custom<T>(msg: T) -> Self where T: Display {
+        VonError {
+            kind: Box::new(VonErrorKind::CustomError {
+                message: msg.to_string(),
+            })
+        }
+    }
+}
 
 impl Display for VonError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -23,24 +49,34 @@ impl Error for VonError {}
 
 impl serde::ser::Error for VonError {
     fn custom<T>(msg: T) -> Self where T: Display {
-        todo!()
+        let encode = VonErrorKind::EncodeError {
+            message: msg.to_string(),
+        };
+        VonError {
+            kind: Box::new(encode),
+        }
     }
 }
 
 impl serde::de::Error for VonError {
     fn custom<T>(msg: T) -> Self where T: Display {
+        let decode = VonErrorKind::DecodeError {
+            message: msg.to_string(),
+        };
+        VonError {
+            kind: Box::new(decode),
+        }
+    }
+
+    fn invalid_type(unexp: Unexpected, exp: &dyn Expected) -> Self {
         todo!()
     }
 
-    fn invalid_type(unexp: Unexpected, exp: &Expected) -> Self {
+    fn invalid_value(unexp: Unexpected, exp: &dyn Expected) -> Self {
         todo!()
     }
 
-    fn invalid_value(unexp: Unexpected, exp: &Expected) -> Self {
-        todo!()
-    }
-
-    fn invalid_length(len: usize, exp: &Expected) -> Self {
+    fn invalid_length(len: usize, exp: &dyn Expected) -> Self {
         todo!()
     }
 
@@ -58,5 +94,11 @@ impl serde::de::Error for VonError {
 
     fn duplicate_field(field: &'static str) -> Self {
         todo!()
+    }
+}
+
+impl From<std::fmt::Error> for VonError {
+    fn from(value: std::fmt::Error) -> Self {
+        <Self as serde::ser::Error>::custom(value)
     }
 }
