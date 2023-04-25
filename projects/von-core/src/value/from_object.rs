@@ -10,6 +10,7 @@ impl VirtualObject {
             VirtualObject::String(v) => Unexpected::Str(v),
             VirtualObject::Integer(_) => Unexpected::Other("integer"),
             VirtualObject::Decimal(_) => Unexpected::Other("decimal"),
+            VirtualObject::Table(_) => Unexpected::Other("table"),
         }
     }
 }
@@ -32,7 +33,7 @@ impl<'de> Deserializer<'de> for VirtualObject {
             VirtualObject::Boolean(v) => visitor.visit_bool(*v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`true` or `false`"))
+                Err(Error::invalid_value(unexpected, &"`true` or `false`"))
             }
         }
     }
@@ -41,16 +42,11 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_i8() {
-                Some(v) => visitor.visit_i8(v),
-                None => {
-                    Err(Error::custom(format!("integer `{v}` does not fit into the type `i8` whose range is `-128..=127`")))
-                }
-            },
+        match self.to_i8() {
+            Some(v) => visitor.visit_i8(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer` in range `-128..=127`"))
+                Err(Error::invalid_value(unexpected, &"`integer` in range `-128..=127`"))
             }
         }
     }
@@ -59,16 +55,11 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_i16() {
-                Some(v) => visitor.visit_i16(v),
-                None => Err(Error::custom(format!(
-                    "integer `{v}` does not fit into the type `i16` whose range is `-32768..=32767`"
-                ))),
-            },
+        match self.to_i16() {
+            Some(v) => visitor.visit_i16(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer`"))
+                Err(Error::invalid_value(unexpected, &"`integer` in range `-32768..=32767`"))
             }
         }
     }
@@ -77,16 +68,11 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_i32() {
-                Some(v) => visitor.visit_i32(v),
-                None => Err(Error::custom(format!(
-                    "integer `{v}` does not fit into the type `i32` whose range is `-2147483648..=2147483647`"
-                ))),
-            },
+        match self.to_i32() {
+            Some(v) => visitor.visit_i32(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer`"))
+                Err(Error::invalid_value(unexpected, &"`integer` in range `-2147483648..=2147483647`"))
             }
         }
     }
@@ -95,16 +81,11 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_i64() {
-                Some(v) => visitor.visit_i64(v),
-                None => Err(Error::custom(format!(
-                    "integer `{v}` does not fit into the type `i64` whose range is `-9223372036854775808..=9223372036854775807`"
-                ))),
-            },
+        match self.to_i64() {
+            Some(v) => visitor.visit_i64(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer`"))
+                Err(Error::invalid_value(unexpected, &"`integer` in range `-9223372036854775808..=9223372036854775807`"))
             }
         }
     }
@@ -113,16 +94,14 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_i128() {
-                Some(v) => visitor.visit_i128(v),
-                None => Err(Error::custom(format!(
-                    "integer `{v}` does not fit into the type `i128` whose range is `-170141183460469231731687303715884105728..=170141183460469231731687303715884105727`"
-                ))),
-            },
+        match self.to_i128() {
+            Some(v) => visitor.visit_i128(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer`"))
+                Err(Error::invalid_value(
+                    unexpected,
+                    &"`integer` in range `-170141183460469231731687303715884105728..=170141183460469231731687303715884105727`",
+                ))
             }
         }
     }
@@ -131,14 +110,11 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_u8() {
-                Some(v) => visitor.visit_u8(v),
-                None => Err(Error::custom(format!("integer `{v}` does not fit into the type `u8` whose range is `0..=255`"))),
-            },
+        match self.to_u8() {
+            Some(v) => visitor.visit_u8(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer`"))
+                Err(Error::invalid_value(unexpected, &"`integer` in range `0..=255`"))
             }
         }
     }
@@ -147,16 +123,11 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_u16() {
-                Some(v) => visitor.visit_u16(v),
-                None => {
-                    Err(Error::custom(format!("integer `{v}` does not fit into the type `u16` whose range is `0..=65535`")))
-                }
-            },
+        match self.to_u16() {
+            Some(v) => visitor.visit_u16(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer`"))
+                Err(Error::invalid_value(unexpected, &"`integer` in range `0..=65535`"))
             }
         }
     }
@@ -165,16 +136,11 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_u32() {
-                Some(v) => visitor.visit_u32(v),
-                None => Err(Error::custom(format!(
-                    "integer `{v}` does not fit into the type `u32` whose range is `0..=4294967295`"
-                ))),
-            },
+        match self.to_u32() {
+            Some(v) => visitor.visit_u32(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer`"))
+                Err(Error::invalid_value(unexpected, &"`integer` in range `0..=4294967295`"))
             }
         }
     }
@@ -183,16 +149,11 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_u64() {
-                Some(v) => visitor.visit_u64(v),
-                None => Err(Error::custom(format!(
-                    "integer `{v}` does not fit into the type `u64` whose range is `0..=18446744073709551615`"
-                ))),
-            },
+        match self.to_u64() {
+            Some(v) => visitor.visit_u64(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer`"))
+                Err(Error::invalid_value(unexpected, &"`integer` in range `0..=18446744073709551615`"))
             }
         }
     }
@@ -201,16 +162,11 @@ impl<'de> Deserializer<'de> for VirtualObject {
     where
         V: Visitor<'de>,
     {
-        match &self {
-            VirtualObject::Integer(v) => match v.to_u128() {
-                Some(v) => visitor.visit_u128(v),
-                None => Err(Error::custom(format!(
-                    "integer `{v}` does not fit into the type `u128` whose range is `0..=340282366920938463463374607431768211455`"
-                ))),
-            },
+        match self.to_u128() {
+            Some(v) => visitor.visit_u128(v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`integer`"))
+                Err(Error::invalid_value(unexpected, &"`integer` in range `0..=340282366920938463463374607431768211455`"))
             }
         }
     }
@@ -223,7 +179,7 @@ impl<'de> Deserializer<'de> for VirtualObject {
             VirtualObject::Decimal(v) => visitor.visit_f32(*v as f32),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`decimal`"))
+                Err(Error::invalid_value(unexpected, &"`decimal`"))
             }
         }
     }
@@ -236,7 +192,7 @@ impl<'de> Deserializer<'de> for VirtualObject {
             VirtualObject::Decimal(v) => visitor.visit_f64(*v),
             _ => {
                 let unexpected = self.as_unexpected_type();
-                Err(Error::invalid_type(unexpected, &"`decimal`"))
+                Err(Error::invalid_value(unexpected, &"`decimal`"))
             }
         }
     }
