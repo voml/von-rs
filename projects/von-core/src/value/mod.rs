@@ -19,6 +19,7 @@ mod number_like;
 pub mod text_reader;
 use crate::table::VirtualTable;
 
+#[derive(Debug, Clone)]
 pub enum VirtualObject {
     Default,
     Boolean(bool),
