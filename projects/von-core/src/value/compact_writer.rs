@@ -3,13 +3,21 @@ use serde::ser::{SerializeMap, SerializeSeq, SerializeStruct, SerializeStructVar
 use crate::{VonError, VonResult};
 use super::*;
 
-pub struct CompactWriter<W: Write> {
-    writer: W,
+pub struct CompactWriter<'i, W> {
+    buffer: &'i mut W,
+    quotation_marks: char,
 }
 
-pub struct CompactSequence {}
+impl<'i, W> CompactWriter<'i, W> where W: Write {
+    pub fn new(buffer: &'i mut W) -> Self {
+        CompactWriter {
+            buffer,
+            quotation_marks: '\"',
+        }
+    }
+}
 
-impl<W> Serializer for CompactWriter<W> where W: Write {
+impl<'i, W> Serializer for CompactWriter<'i, W> where W: Write {
     type Ok = ();
     type Error = VonError;
     type SerializeSeq = CompactSequence;
@@ -20,57 +28,57 @@ impl<W> Serializer for CompactWriter<W> where W: Write {
     type SerializeStruct = CompactSequence;
     type SerializeStructVariant = CompactSequence;
 
-    fn serialize_bool(mut self, v: bool) -> VonResult<()> {
+    fn serialize_bool(self, v: bool) -> VonResult<()> {
         let text = if v { "true" } else { "false" };
-        Ok(self.writer.write_str(text)?)
+        Ok(self.buffer.write_str(text)?)
     }
 
-    fn serialize_i8(mut self, v: i8) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_i8(self, v: i8) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_i16(mut self, v: i16) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_i16(self, v: i16) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_i32(mut self, v: i32) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_i32(self, v: i32) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_i64(mut self, v: i64) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_i64(self, v: i64) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_i128(mut self, v: i128) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_i128(self, v: i128) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_u8(mut self, v: u8) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_u8(self, v: u8) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_u16(mut self, v: u16) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_u16(self, v: u16) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_u32(mut self, v: u32) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_u32(self, v: u32) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_u64(mut self, v: u64) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_u64(self, v: u64) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_u128(mut self, v: u128) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_u128(self, v: u128) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_f32(mut self, v: f32) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_f32(self, v: f32) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
-    fn serialize_f64(mut self, v: f64) -> VonResult<()> {
-        Ok(write!(self.writer, "{}", v)?)
+    fn serialize_f64(self, v: f64) -> VonResult<()> {
+        Ok(write!(self.buffer, "{}", v)?)
     }
 
     fn serialize_char(self, v: char) -> Result<Self::Ok, Self::Error> {
@@ -157,6 +165,8 @@ impl<W> Serializer for CompactWriter<W> where W: Write {
         true
     }
 }
+
+pub struct CompactSequence {}
 
 impl SerializeSeq for CompactSequence {
     type Ok = ();
