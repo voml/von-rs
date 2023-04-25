@@ -3,15 +3,14 @@ name = "meta-table"
 version = "0.0.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "A lua like meta table"
-repository = "https://github.com/oovm/sub_projects"
-documentation = "https://docs.rs/sub_projects"
+repository = "https://github.com/voml/von-rs"
+documentation = "https://docs.rs/meta-table"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
 serde = "1.0.160"
-tracing = "0.1.37"
 
 [dev-dependencies]
 serde_json = "1.0.96"
