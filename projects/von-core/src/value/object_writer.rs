@@ -1,15 +1,18 @@
 use super::*;
 use std::io::Write;
 
-pub struct ObjectWriter<'i, W> {
-    buffer: &'i mut W,
+pub struct ObjectWriter {
+    object: VirtualObject,
 }
 
-impl<'i, W> ObjectWriter<'i, W>
-where
-    W: Write,
-{
-    pub fn new(buffer: &'i mut W) -> Self {
-        ObjectWriter { buffer }
+impl Default for ObjectWriter {
+    fn default() -> Self {
+        ObjectWriter { object: VirtualObject::Default }
+    }
+}
+
+impl ObjectWriter {
+    pub fn new(object: VirtualObject) -> Self {
+        ObjectWriter { object }
     }
 }
