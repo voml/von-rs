@@ -1,6 +1,6 @@
 use serde::{Serialize, Serializer};
 
-pub mod conpact_writer;
+pub mod compact_writer;
 pub mod text_reader;
 
 pub enum VirtualObject {
