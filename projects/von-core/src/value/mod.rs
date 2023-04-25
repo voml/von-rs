@@ -1,4 +1,5 @@
 use crate::{VonError, VonResult};
+use num::BigInt;
 use serde::{
     de::Visitor,
     ser::{
@@ -12,11 +13,24 @@ use std::fmt::Display;
 pub mod binary_writer;
 pub mod compact_writer;
 mod convert;
-pub mod object_writer;
+mod from_object;
+pub mod into_object;
+mod number_like;
 pub mod text_reader;
 
 pub enum VirtualObject {
     Default,
-    Bool(bool),
+    Boolean(bool),
     String(String),
+    Integer(BigInt),
+    Decimal(f64),
+}
+
+impl VirtualObject {
+    pub fn integer<T>(value: T) -> Self
+    where
+        T: Into<BigInt>,
+    {
+        VirtualObject::Integer(value.into())
+    }
 }

@@ -1,4 +1,4 @@
-use crate::{CompactWriter, TextReader, VonResult};
+use crate::{CompactWriter, VirtualObject, VonResult};
 use serde::{Deserialize, Serialize};
 
 pub fn to_string<T>(value: &T) -> VonResult<String>
@@ -15,6 +15,6 @@ pub fn from_str<'de, T>(string: &str) -> VonResult<T>
 where
     T: Deserialize<'de>,
 {
-    let reader = TextReader::new(string);
+    let reader = VirtualObject::Default;
     T::deserialize(reader)
 }

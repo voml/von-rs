@@ -6,7 +6,7 @@ pub use crate::{
     errors::{VonError, VonResult},
     helpers::{from_str, to_string},
     value::{
-        binary_writer::BinaryWriter, compact_writer::CompactWriter, object_writer::ObjectWriter, text_reader::TextReader,
+        binary_writer::BinaryWriter, compact_writer::CompactWriter, into_object::ObjectWriter, text_reader::TextReader,
         VirtualObject,
     },
 };

@@ -10,12 +10,12 @@ impl Error for VonError {
         VonError { kind: Box::new(decode) }
     }
 
-    fn invalid_type(unexp: Unexpected, exp: &dyn Expected) -> Self {
-        todo!()
+    fn invalid_type(wrong: Unexpected, needed: &dyn Expected) -> Self {
+        Error::custom(format!("invalid type: `{wrong}`, expected: {needed}"))
     }
 
-    fn invalid_value(unexp: Unexpected, exp: &dyn Expected) -> Self {
-        todo!()
+    fn invalid_value(wrong: Unexpected, needed: &dyn Expected) -> Self {
+        Error::custom(format!("invalid value: `{wrong}`, expected: {needed}"))
     }
 
     fn invalid_length(len: usize, exp: &dyn Expected) -> Self {
@@ -38,6 +38,7 @@ impl Error for VonError {
         todo!()
     }
 }
+
 impl From<ParseBoolError> for VonError {
     fn from(value: ParseBoolError) -> Self {
         <Self as Error>::custom(value)

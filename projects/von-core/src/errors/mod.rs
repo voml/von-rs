@@ -7,12 +7,12 @@ use std::{
 };
 mod decode_error;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
 pub struct VonError {
     kind: Box<VonErrorKind>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
 pub enum VonErrorKind {
     CustomError { message: String },
     EncodeError { message: String },
