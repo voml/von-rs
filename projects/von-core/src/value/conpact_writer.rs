@@ -1,19 +1,22 @@
+use serde::ser::{SerializeMap, SerializeSeq, SerializeStruct, SerializeStructVariant, SerializeTuple, SerializeTupleStruct, SerializeTupleVariant};
+use crate::VonError;
 use super::*;
 
-pub struct TextWriter {
+pub struct CompactWriter {}
 
-}
+pub struct CompactSequence {}
 
-impl Serializer for TextWriter {
+
+impl Serializer for CompactWriter {
     type Ok = ();
-    type Error = ();
-    type SerializeSeq = ();
-    type SerializeTuple = ();
-    type SerializeTupleStruct = ();
-    type SerializeTupleVariant = ();
-    type SerializeMap = ();
-    type SerializeStruct = ();
-    type SerializeStructVariant = ();
+    type Error = VonError;
+    type SerializeSeq = CompactSequence;
+    type SerializeTuple = CompactSequence;
+    type SerializeTupleStruct = CompactSequence;
+    type SerializeTupleVariant = CompactSequence;
+    type SerializeMap = CompactSequence;
+    type SerializeStruct = CompactSequence;
+    type SerializeStructVariant = CompactSequence;
 
     fn serialize_bool(self, v: bool) -> Result<Self::Ok, Self::Error> {
         todo!()
@@ -124,6 +127,102 @@ impl Serializer for TextWriter {
     }
 
     fn serialize_struct_variant(self, name: &'static str, variant_index: u32, variant: &'static str, len: usize) -> Result<Self::SerializeStructVariant, Self::Error> {
+        todo!()
+    }
+}
+
+impl SerializeSeq for CompactSequence {
+    type Ok = ();
+    type Error = VonError;
+
+    fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+        todo!()
+    }
+
+    fn end(self) -> Result<Self::Ok, Self::Error> {
+        todo!()
+    }
+}
+
+impl SerializeTuple for CompactSequence {
+    type Ok = ();
+    type Error = VonError;
+
+    fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+        todo!()
+    }
+
+    fn end(self) -> Result<Self::Ok, Self::Error> {
+        todo!()
+    }
+}
+
+impl SerializeMap for CompactSequence {
+    type Ok = ();
+    type Error = VonError;
+
+    fn serialize_key<T: ?Sized>(&mut self, key: &T) -> Result<(), Self::Error> where T: Serialize {
+        todo!()
+    }
+
+    fn serialize_value<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+        todo!()
+    }
+
+    fn end(self) -> Result<Self::Ok, Self::Error> {
+        todo!()
+    }
+}
+
+impl SerializeStruct for CompactSequence {
+    type Ok = ();
+    type Error = VonError;
+
+    fn serialize_field<T: ?Sized>(&mut self, key: &'static str, value: &T) -> Result<(), Self::Error> where T: Serialize {
+        todo!()
+    }
+
+    fn end(self) -> Result<Self::Ok, Self::Error> {
+        todo!()
+    }
+}
+
+
+impl SerializeTupleVariant for CompactSequence {
+    type Ok = ();
+    type Error = VonError;
+
+    fn serialize_field<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+        todo!()
+    }
+
+    fn end(self) -> Result<Self::Ok, Self::Error> {
+        todo!()
+    }
+}
+
+impl SerializeTupleStruct for CompactSequence {
+    type Ok = ();
+    type Error = VonError;
+
+    fn serialize_field<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error> where T: Serialize {
+        todo!()
+    }
+
+    fn end(self) -> Result<Self::Ok, Self::Error> {
+        todo!()
+    }
+}
+
+impl SerializeStructVariant for CompactSequence {
+    type Ok = ();
+    type Error = VonError;
+
+    fn serialize_field<T: ?Sized>(&mut self, key: &'static str, value: &T) -> Result<(), Self::Error> where T: Serialize {
+        todo!()
+    }
+
+    fn end(self) -> Result<Self::Ok, Self::Error> {
         todo!()
     }
 }

@@ -1,7 +1,7 @@
 use serde::{Serialize, Serializer};
 
-pub mod serializer;
-pub mod deserializer;
+pub mod conpact_writer;
+pub mod text_reader;
 
 pub enum VirtualObject {
     Default,
@@ -9,8 +9,6 @@ pub enum VirtualObject {
     String(String),
 }
 
-pub struct TextReader {
 
-}
 
 
